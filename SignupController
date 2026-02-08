@@ -1,0 +1,62 @@
+package com.example.FormDemo.Controller;
+
+import com.example.FormDemo.DTO.SignInDto;
+import com.example.FormDemo.DTO.SignupDto;
+import com.example.FormDemo.Model.User;
+import com.example.FormDemo.Model.UserRepo;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+
+@Controller
+public class SignupController {
+
+    private final UserRepo repo;
+
+    public SignupController(UserRepo repo) {
+        this.repo = repo;
+    }
+
+    // ---------- SIGNUP ----------
+
+    @GetMapping("/signup")
+    public String signupForm(Model model) {
+        model.addAttribute("signupDto", new SignupDto());
+        return "signup";
+    }
+
+    @PostMapping("/signup")
+    public String signup(@ModelAttribute SignupDto dto) {
+        User user = new User(dto.getName(), dto.getPassword());
+        repo.save(user);
+
+        // 👇 after signup go to signin page
+        return "redirect:/signIn";
+    }
+
+    // ---------- SIGNIN ----------
+
+    @GetMapping("/signIn")
+    public String signInForm(Model model) {
+        model.addAttribute("signInDto", new SignInDto());
+        return "SignIn";
+    }
+
+    @PostMapping("/signIn")
+    public String signIn(
+            @ModelAttribute("signInDto") SignInDto signInDto,
+            Model model) {
+
+        User user = repo.findByNameAndPassword(
+                signInDto.getName(),
+                signInDto.getPassword()
+        );
+
+        if (user == null) {
+            model.addAttribute("error", "Invalid username or password");
+            return "SignIn"; // ❌ no redirect
+        }
+
+        return "success"; // ✅ only if name + password match
+    }
+}
