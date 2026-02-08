@@ -5,16 +5,15 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>SignIn</title>
+    <title>signup</title>
 </head>
 <body>
-<p th:if="${error}" th:text="${error}" style="color:red;"></p>
-<form th:action="@{/signIn}" th:object="${signInDto}" method="post">
-    <label>UserName:</label>
-    <input type="text" th:field="*{name}">
+<form th:action="@{/signup}" th:object="${signupDto}" method="post">
+    <lable>UserName:</lable>
+<input type="text" th:field="*{name}">
     <br><br>
     <label>Password:</label>
-    <input type="password" th:field="*{password}">
+<input type="password" th:field="*{password}">
     <br><br>
     <input type="submit">
 </form>
